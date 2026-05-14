@@ -1,0 +1,127 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Sale;
+
+class ProductController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = Product::query();
+
+        if ($request->filled('product_name')) {
+            $query->where('product_name', 'like', '%' . $request->product_name . '%');
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        $products = $query->get();
+
+        return view('products.index', compact('products'));
+    }
+    public function show(Product $product)
+    {
+        return view('products.show', compact('product'));
+
+    }
+
+    public function purchase(Product $product)
+    {
+        return view('products.purchase', compact('product'));
+    }
+
+    public function storePurchase(Request $request, Product $product)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1|max:' . $product->stock,
+        ]);
+
+        Sale::create([
+            'user_id' => auth()->id(),
+            'product_id' => $product->id,
+            'quantity' => $request->quantity,
+        ]);
+
+        $product->stock -= $request->quantity;
+        $product->save();
+
+        return redirect()->route('products.index')->with('success', '購入が完了しました');
+    }
+
+    public function create()
+    {
+         return view('products.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'product_name' => 'required|string|max:255',
+            'price' => 'required|integer|min:0',
+            'stock' => 'required|integer|min:0',
+            'description' => 'required|string|max:255',
+            'img_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('img_path')) {
+            $imagePath = $request->file('img_path')->store('images', 'public');
+            $validatedData['img_path'] = $imagePath;
+        } else {
+            $validatedData['img_path'] = '';
+        }
+
+        $validatedData['user_id'] = auth()->id();
+        $validatedData['company_id'] = auth()->user()->company_id;
+
+        Product::create($validatedData);
+
+        return redirect()->route('products.index')->with('success', '商品を登録しました');
+    }
+
+    public function edit(Product $product)
+    {
+        return view('products.edit', compact('product'));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $validatedData = $request->validate([
+            'product_name' => 'required|string|max:255',
+            'price' => 'required|integer|min:0',
+            'stock' => 'required|integer|min:0',
+            'description' => 'required|string|max:255',
+            'img_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('img_path')) {
+            $imagePath = $request->file('img_path')->store('images', 'public');
+            $validatedData['img_path'] = $imagePath;
+        }
+
+        $product->update($validatedData);
+
+        return redirect()->route('products.show', $product)
+            ->with('success', '商品情報を更新しました');
+    }
+
+    public function destroy(Product $product)
+    {
+        if (auth()->id() !== $product->user_id) {
+        abort(403);
+        }
+
+        $product->delete();
+
+        return redirect()->route('products.index')
+            ->with('success', '商品を削除しました');
+    }
+}
