@@ -7,15 +7,32 @@
         {{-- 右側 --}}
         <div class="d-flex align-items-center gap-3">
 
-            <a href="{{ route('products.index') }}">
-                Home
-            </a>
 
-            <a href="{{ route('mypage.index') }}">
-                マイページ
-            </a>
 
+            {{-- ログインしていない時 --}}
+            @guest
+
+                <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">
+                    ログイン
+                </a>
+
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">
+                    新規登録
+                </a>
+
+            @endguest
+
+            {{-- ログイン中 --}}
             @auth
+
+                <a href="{{ route('products.index') }}">
+                    Home
+                </a>
+
+                <a href="{{ route('mypage.index') }}">
+                    マイページ
+                </a>
+
                 <span>
                     ログインユーザー：{{ Auth::user()->name }}
                 </span>

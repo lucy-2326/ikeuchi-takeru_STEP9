@@ -84,7 +84,7 @@ class ProductController extends Controller
 
         Product::create($validatedData);
 
-        return redirect()->route('products.index')->with('success', '商品を登録しました');
+        return redirect()->route('mypage.index')->with('success', '商品を登録しました');
     }
 
     public function edit(Product $product)
@@ -109,7 +109,7 @@ class ProductController extends Controller
 
         $product->update($validatedData);
 
-        return redirect()->route('products.show', $product)
+        return redirect()->route('mypage.products.show', $product)
             ->with('success', '商品情報を更新しました');
     }
 
@@ -121,7 +121,16 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('products.index')
+        return redirect()->route('mypage.index')
             ->with('success', '商品を削除しました');
+    }
+
+    public function myProductShow(Product $product)
+    {
+        if (auth()->id() !== $product->user_id) {
+            abort(403);
+        }
+
+        return view('products.my_show', compact('product'));
     }
 }

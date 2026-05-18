@@ -1,43 +1,42 @@
 @extends('layouts.app')
 
-@section('title', '商品一覧')
-
 @section('content')
 
-<div class="container mt-5">
+<div class="container">
 
     <h1 class="mb-4">商品一覧</h1>
 
-    @auth
-        <a href="{{ route('products.create') }}" class="btn btn-success mb-3">
-            商品登録
-        </a>
-    @endauth
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
+    {{-- 検索フォーム --}}
     <form action="{{ route('products.index') }}" method="GET" class="mb-4">
         <div class="row">
             <div class="col-md-4">
                 <input type="text"
-                    name="product_name"
-                    class="form-control"
-                    placeholder="商品名で検索"
-                    value="{{ request('product_name') }}">
+                       name="product_name"
+                       class="form-control"
+                       placeholder="商品名で検索"
+                       value="{{ request('product_name') }}">
             </div>
 
             <div class="col-md-3">
                 <input type="number"
-                   name="min_price"
-                   class="form-control"
-                   placeholder="最低価格"
-                   value="{{ request('min_price') }}">
+                       name="min_price"
+                       class="form-control"
+                       placeholder="最低価格"
+                       value="{{ request('min_price') }}">
             </div>
 
             <div class="col-md-3">
                 <input type="number"
-                    name="max_price"
-                    class="form-control"
-                    placeholder="最高価格"
-                    value="{{ request('max_price') }}">
+                       name="max_price"
+                       class="form-control"
+                       placeholder="最高価格"
+                       value="{{ request('max_price') }}">
             </div>
 
             <div class="col-md-2">
@@ -48,64 +47,79 @@
         </div>
     </form>
 
-    @if(session('success'))
-         <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+    @auth
+        <a href="{{ route('products.create') }}" class="btn btn-success mb-3">
+            商品登録
+        </a>
+    @endauth
 
-    <div class="row">
+    <table class="table table-bordered align-middle">
 
-        @forelse($products as $product)
+        <thead>
+            <tr>
+                <th>商品番号</th>
+                <th>商品名</th>
+                <th>商品説明</th>
+                <th>画像</th>
+                <th>料金(¥)</th>
+                <th></th>
+            </tr>
+        </thead>
 
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
+        <tbody>
 
-                    @if($product->img_path)
-                        <img src="{{ asset('storage/' . $product->img_path) }}"
-                             class="card-img-top"
-                             alt="商品画像">
-                    @else
-                        <div class="bg-light text-center p-5">
-                            No Image
-                        </div>
-                    @endif
+            @forelse($products as $product)
 
-                    <div class="card-body">
+                <tr>
 
-                        <h5 class="card-title">
-                            {{ $product->product_name }}
-                        </h5>
+                    <td>{{ $product->id }}</td>
 
-                        <p class="card-text">
-                            ¥{{ number_format($product->price) }}
-                        </p>
+                    <td>{{ $product->product_name }}</td>
 
-                        <p class="card-text">
-                            在庫：{{ $product->stock }}
-                        </p>
+                    <td>{{ $product->description }}</td>
 
-                        <p class="card-text">
-                            {{ $product->description }}
-                        </p>
+                    <td>
+                        @if($product->img_path)
 
+                            <img src="{{ asset('storage/' . $product->img_path) }}"
+                                alt="商品画像"
+                                width="50"
+                                height="50"
+                                style="object-fit: cover;">
+
+                        @else
+
+                            画像なし
+
+                        @endif
+                    </td>
+
+                    <td>
+                        ¥{{ number_format($product->price) }}
+                    </td>
+
+                    <td>
                         <a href="{{ route('products.show', $product) }}"
-                           class="btn btn-primary">
+                            class="btn btn-success btn-sm">
                             詳細
                         </a>
+                    </td>
 
-                    </div>
+                </tr>
 
-                </div>
-            </div>
+            @empty
 
-        @empty
+                <tr>
+                    <td colspan="6">
+                        商品がありません。
+                    </td>
+                </tr>
 
-            <p>商品がありません</p>
+            @endforelse
 
-        @endforelse
+        </tbody>
 
-    </div>
+    </table>
 
 </div>
 

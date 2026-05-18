@@ -2,7 +2,7 @@
 
     <div class="container text-center">
 
-        <a href="#" class="btn btn-primary mb-3">
+        <a href="{{ route('contact.index') }}" class="btn btn-primary mb-3">
             お問い合わせ
         </a>
 

@@ -1,98 +1,63 @@
 @extends('layouts.app')
 
-@section('title', '商品詳細')
-
 @section('content')
-
 <div class="container mt-5">
 
-    <h1 class="mb-4">商品詳細</h1>
+    <h1 class="mb-5">商品詳細</h1>
 
-    <div class="card">
+    {{-- 商品名・説明 --}}
+    <div class="mb-5">
+        <p class="fs-4 mb-2">商品名：{{ $product->name }}</p>
+        <p class="fs-4">説明：{{ $product->description }}</p>
+    </div>
+
+    {{-- 商品画像 --}}
+    <div class="mb-4">
+        <p class="fs-4">画像：</p>
 
         @if($product->img_path)
             <img src="{{ asset('storage/' . $product->img_path) }}"
-                 class="card-img-top"
-                 alt="商品画像">
+                 alt="商品画像"
+                 style="max-width: 500px; width: 100%; display: block; margin: 0 auto;">
         @else
             <div class="bg-light text-center p-5">
                 No Image
             </div>
         @endif
+    </div>
 
-        <div class="card-body">
+    {{-- 金額・会社・お気に入り --}}
+    <div class="mb-4">
+        <p class="fs-4 mb-2">金額：￥{{ $product->price }}</p>
+        <p class="fs-4 mb-2">会社：{{ $product->company }}</p>
 
-            <h2 class="card-title mb-3">
-                {{ $product->product_name }}
-            </h2>
-
-            <p class="card-text">
-                <strong>価格：</strong>
-                ¥{{ number_format($product->price) }}
-            </p>
-
-            <p class="card-text">
-                <strong>在庫：</strong>
-                {{ $product->stock }}
-            </p>
-
-            <p class="card-text">
-                <strong>説明：</strong>
-                {{ $product->description }}
-            </p>
-
-            <a href="{{ route('products.purchase', $product) }}"
-               class="btn btn-success">
-                購入する
-            </a>
-
-            @auth
-                @if(auth()->id() === $product->user_id)
-                    <a href="{{ route('products.edit', $product) }}" class="btn btn-warning mb-3">
-                        編集
-                    </a>
-                @endif
-            @endauth
-
-            @auth
-
-                @if(auth()->id() === $product->user_id)
-                    <form action="{{ route('products.destroy', $product) }}"
-                        method="POST"
-                        class="d-inline"
-                        onsubmit="return confirm('本当に削除しますか？');">
-
-                      @csrf
-                      @method('DELETE')
-
-                      <button type="submit" class="btn btn-danger mb-3">
-                         削除
-                      </button>
-                    </form>
-                @endif
-            @endauth
-
-            <form action="{{ route('products.like', $product) }}"
-                  method="POST"
-                  class="mb-3 mt-3">
-
+        @auth
+            <form action="{{ route('products.like', $product) }}" method="POST">
                 @csrf
 
-                <button type="submit" class="btn btn-danger">
-                    お気に入り追加
+                <button type="submit"
+                    style="border:none; background:none; font-size:40px; padding:0;">
+                    @if($product->isLikedByUser())
+                        <span style="color:red;">♥</span>
+                    @else
+                        <span style="color:black;">♡</span>
+                    @endif
                 </button>
-
             </form>
+        @endauth
+    </div>
 
-            <a href="{{ route('products.index') }}"
-               class="btn btn-secondary">
-                戻る
-            </a>
+    {{-- ボタン横並び --}}
+    <div class="d-flex gap-2 mb-5">
+        <a href="{{ route('products.purchase', $product) }}"
+            class="btn btn-primary btn-lg">
+                カートに追加する
+        </a>
 
-        </div>
-
+        <a href="{{ route('products.index') }}" class="btn btn-secondary btn-lg">
+            戻る
+        </a>
     </div>
 
 </div>
-
 @endsection
