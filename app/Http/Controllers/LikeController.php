@@ -16,13 +16,17 @@ class LikeController extends Controller
 
         if ($like) {
             $like->delete();
+            $liked = false;
         } else {
             Like::create([
                 'user_id' => auth()->id(),
                 'product_id' => $product->id,
             ]);
+            $liked = true;
         }
 
-        return back();
+        return response()->json([
+            'liked' => $liked,
+        ]);
     }
 }

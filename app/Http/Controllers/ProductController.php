@@ -12,6 +12,10 @@ class ProductController extends Controller
     {
         $query = Product::query();
 
+        if (auth()->check()) {
+            $query->where('user_id', '!=', auth()->id());
+        }
+
         if ($request->filled('product_name')) {
             $query->where('product_name', 'like', '%' . $request->product_name . '%');
         }

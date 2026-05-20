@@ -32,16 +32,14 @@
         <p class="fs-4 mb-2">会社：{{ $product->company }}</p>
 
         @auth
-            <form action="{{ route('products.like', $product) }}" method="POST">
+            <form action="{{ route('products.like', $product) }}" method="POST" class="like-form">
                 @csrf
 
                 <button type="submit"
                     style="border:none; background:none; font-size:40px; padding:0;">
-                    @if($product->isLikedByUser())
-                        <span style="color:red;">♥</span>
-                    @else
-                        <span style="color:black;">♡</span>
-                    @endif
+                    <span class="like-heart" style="color:{{ $product->isLikedByUser() ? 'red' : 'black' }};">
+                        {{ $product->isLikedByUser() ? '♥' : '♡' }}
+                    </span>
                 </button>
             </form>
         @endauth

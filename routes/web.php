@@ -60,9 +60,13 @@ Route::put('/products/{product}', [ProductController::class, 'update'])
 
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-Route::get('/products/{product}/purchase', [ProductController::class, 'purchase'])->name('products.purchase');
+Route::get('/products/{product}/purchase', [ProductController::class, 'purchase'])
+    ->middleware('auth')
+    ->name('products.purchase');
 
-Route::post('/products/{product}/purchase',    [ProductController::class, 'storePurchase'])->name('products.purchase.store');
+Route::post('/products/{product}/purchase', [ProductController::class, 'storePurchase'])
+    ->middleware('auth')
+    ->name('products.purchase.store');
 
 Route::get('/contact', [ContactController::class, 'index'])
     ->name('contact.index');

@@ -26,6 +26,8 @@
         @include('layouts.footer')
 
     </div>
+
+    <script src="{{ asset('js/like.js') }}"></script>
 </body>
 
 </html>
