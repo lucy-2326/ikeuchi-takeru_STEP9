@@ -6,6 +6,18 @@
 
 <div class="container mt-5">
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+
+        </div>
+    @endif
+
     <h1 class="mb-4">購入画面</h1>
 
     <div class="card">

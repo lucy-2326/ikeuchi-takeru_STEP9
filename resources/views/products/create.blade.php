@@ -1,7 +1,20 @@
 @extends('layouts.app')
 
+@section('title', '商品新規登録')
+
 @section('content')
 <div class="container">
+    @if ($errors->any())
+        <div class="alert alert-danger">
+
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+
+        </div>
+    @endif
 
     <h1 class="mb-4">商品新規登録</h1>
 
@@ -66,7 +79,7 @@
             登録
         </button>
 
-        <a href="{{ route('products.index') }}" class="btn btn-secondary">
+        <a href="{{ route('mypage.index') }}" class="btn btn-secondary">
             戻る
         </a>
     </form>

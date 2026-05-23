@@ -48,12 +48,47 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'name_kanji' => ['required', 'string', 'max:255'],
-            'name_kana' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'company_id' => ['required', 'integer'],
+            'name' => ['required', 'string', 'max:255','unique:users',],
+
+            'name_kanji' => ['required', 'string', 'max:255','regex:/^[一-龠々]+$/u',],
+
+            'name_kana' => ['required', 'string', 'max:255','regex:/^[ァ-ヶー]+$/u',],
+
+            'email' => [
+            'required',
+            'string',
+            'email:rfc,dns',
+            'max:255',
+            'unique:users',],
+
+            'password' => ['required', 'string', 'min:8', 'confirmed','regex:/^[a-zA-Z0-9]+$/',],
+
+        ],[
+
+
+            // ユーザー名
+            'name.required' => 'ユーザー名を入力してください。',
+            'name.unique' => 'このユーザー名は既に使用されています。',
+
+            // 名前（漢字）
+            'name_kanji.required' => '名前（漢字）を入力してください。',
+            'name_kanji.regex' => '名前（漢字）は漢字のみで入力してください。',
+
+            // 名前（カナ）
+            'name_kana.required' => '名前（カナ）を入力してください。',
+            'name_kana.regex' => '名前（カナ）はカタカナのみで入力してください。',
+
+            // メール
+            'email.required' => 'メールアドレスを入力してください。',
+            'email.email' => '正しいメールアドレス形式で入力してください。',
+            'email.unique' => 'このメールアドレスは既に登録されています。',
+
+            // パスワード
+            'password.required' => 'パスワードを入力してください。',
+            'password.min' => 'パスワードは8文字以上で入力してください。',
+            'password.regex' => 'パスワードは半角英数字で入力してください。',
+            'password.confirmed' => 'パスワード再入力が一致していません。',
+
         ]);
     }
 

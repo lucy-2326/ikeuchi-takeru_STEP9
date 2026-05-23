@@ -100,7 +100,7 @@ class ProductController extends Controller
     {
         $validatedData = $request->validate([
             'product_name' => 'required|string|max:255',
-            'price' => 'required|integer|min:0',
+            'price' => 'required|integer|min:1',
             'stock' => 'required|integer|min:0',
             'description' => 'required|string|max:255',
             'img_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

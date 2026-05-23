@@ -31,16 +31,26 @@ class MypageController extends Controller
         return view('mypage.edit', compact('user'));
     }
 
+
     public function update(Request $request)
     {
         $user = auth()->user();
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'name_kanji' => 'required|string|max:255',
-            'name_kana' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-        ]);
+        $validatedData = $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'name_kanji' => 'required|string|max:255',
+                'name_kana' => 'required|string|max:255',
+                'email' => 'required|email:rfc,dns|max:255|unique:users,email,' . $user->id,
+            ],
+            [
+                'name.required' => 'ユーザー名を入力してください',
+                'name_kanji.required' => '名前（漢字）を入力してください',
+                'name_kana.required' => '名前（カナ）を入力してください',
+                'email.required' => 'メールアドレスを入力してください',
+                'email.email' => '正しいメールアドレス形式で入力してください',
+            ]
+        );
 
         $user->update($validatedData);
 

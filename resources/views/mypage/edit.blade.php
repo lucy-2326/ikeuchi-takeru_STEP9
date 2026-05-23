@@ -1,8 +1,22 @@
 @extends('layouts.app')
 
+@section('title', 'アカウント編集')
+
 @section('content')
 
 <div class="container">
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+
+        </div>
+    @endif
 
     <h1 class="mb-4">アカウント編集</h1>
 

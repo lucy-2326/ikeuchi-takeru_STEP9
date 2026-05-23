@@ -1,7 +1,21 @@
 @extends('layouts.app')
 
+@section('title', '商品編集')
+
 @section('content')
 <div class="container">
+
+     @if ($errors->any())
+        <div class="alert alert-danger">
+
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+
+        </div>
+    @endif
 
     <h1 class="mb-4">商品編集</h1>
 
@@ -102,7 +116,7 @@
             更新
         </button>
 
-        <a href="{{ route('products.show', $product) }}"
+        <a href="{{ route('mypage.products.show', $product) }}"
            class="btn btn-secondary">
             戻る
         </a>
