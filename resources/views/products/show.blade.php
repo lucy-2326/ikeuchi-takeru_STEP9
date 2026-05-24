@@ -5,11 +5,13 @@
 @section('content')
 <div class="container mt-5">
 
+
+
     <h1 class="mb-5">商品詳細</h1>
 
     {{-- 商品名・説明 --}}
     <div class="mb-5">
-        <p class="fs-4 mb-2">商品名：{{ $product->name }}</p>
+        <p class="fs-4 mb-2">商品名：{{ $product->product_name }}</p>
         <p class="fs-4">説明：{{ $product->description }}</p>
     </div>
 

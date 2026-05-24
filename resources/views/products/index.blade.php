@@ -16,37 +16,50 @@
 
     {{-- 検索フォーム --}}
     <form action="{{ route('products.index') }}" method="GET" class="mb-4">
-        <div class="row">
-            <div class="col-md-4">
+
+        <div class="row align-items-center">
+
+            {{-- 商品名検索 --}}
+            <div class="col-md-3">
                 <input type="text"
-                       name="product_name"
-                       class="form-control"
-                       placeholder="商品名で検索"
-                       value="{{ request('product_name') }}">
+                   name="product_name"
+                   class="form-control"
+                   placeholder="商品名で検索"
+                   value="{{ request('product_name') }}">
             </div>
 
+            {{-- 最低価格 --}}
             <div class="col-md-3">
                 <input type="number"
-                       name="min_price"
-                       class="form-control"
-                       placeholder="最低価格"
-                       value="{{ request('min_price') }}">
+                   name="min_price"
+                   class="form-control"
+                   placeholder="最低価格"
+                   value="{{ request('min_price') }}">
             </div>
 
+            {{-- 波線 --}}
+            <div class="col-md-1 text-center fs-4">
+                〜
+            </div>
+
+            {{-- 最高価格 --}}
             <div class="col-md-3">
                 <input type="number"
-                       name="max_price"
-                       class="form-control"
-                       placeholder="最高価格"
-                       value="{{ request('max_price') }}">
+                   name="max_price"
+                   class="form-control"
+                   placeholder="最高価格"
+                   value="{{ request('max_price') }}">
             </div>
 
+            {{-- 検索ボタン --}}
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="submit" class="btn  btn-primary w-100">
                     検索
                 </button>
             </div>
+
         </div>
+
     </form>
 
     @auth
