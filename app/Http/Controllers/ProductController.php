@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Requests\ProductSearchRequest;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    public function index(ProductSearchRequest $request)
     {
+        $validatedData = $request->validated();
+
         $query = Product::query();
 
         if (auth()->check()) {
@@ -17,15 +22,15 @@ class ProductController extends Controller
         }
 
         if ($request->filled('product_name')) {
-            $query->where('product_name', 'like', '%' . $request->product_name . '%');
+            $query->where('product_name', 'like', '%' . $validatedData['product_name'] . '%');
         }
 
         if ($request->filled('min_price')) {
-            $query->where('price', '>=', $request->min_price);
+            $query->where('price', '>=', $validatedData['min_price']);
         }
 
         if ($request->filled('max_price')) {
-            $query->where('price', '<=', $request->max_price);
+            $query->where('price', '<=', $validatedData['max_price']);
         }
 
         $products = $query->get();
@@ -66,15 +71,9 @@ class ProductController extends Controller
          return view('products.create');
     }
 
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $validatedData = $request->validate([
-            'product_name' => 'required|string|max:255',
-            'price' => 'required|integer|min:0',
-            'stock' => 'required|integer|min:0',
-            'description' => 'required|string|max:1000',
-            'img_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validatedData = $request->validated();
 
         if ($request->hasFile('img_path')) {
             $imagePath = $request->file('img_path')->store('images', 'public');
@@ -96,15 +95,9 @@ class ProductController extends Controller
         return view('products.edit', compact('product'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        $validatedData = $request->validate([
-            'product_name' => 'required|string|max:255',
-            'price' => 'required|integer|min:1',
-            'stock' => 'required|integer|min:0',
-            'description' => 'required|string|max:1000',
-            'img_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validatedData = $request->validated();
 
         if ($request->hasFile('img_path')) {
             $imagePath = $request->file('img_path')->store('images', 'public');
@@ -113,8 +106,7 @@ class ProductController extends Controller
 
         $product->update($validatedData);
 
-        return redirect()->route('mypage.products.show', $product)
-            ->with('success', '商品情報を更新しました');
+        return redirect()->route('mypage.index')->with('success', '商品を更新しました');
     }
 
     public function destroy(Product $product)
