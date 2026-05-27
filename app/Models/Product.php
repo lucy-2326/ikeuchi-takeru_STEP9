@@ -19,6 +19,11 @@ class Product extends Model
         'img_path',
     ];
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function likes()
     {
          return $this->hasMany(Like::class);
@@ -33,5 +38,5 @@ class Product extends Model
         return $this->likes()
             ->where('user_id', auth()->id())
             ->exists();
-}
+    }
 }

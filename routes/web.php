@@ -34,10 +34,6 @@ Route::post('/products/{product}/like', [LikeController::class, 'store'])
 
 
 
-Route::get('/likes', [LikeController::class, 'index'])
-    ->name('likes.index')
-    ->middleware('auth');
-
 Route::get('/products/create', [ProductController::class, 'create'])
     ->middleware('auth')
     ->name('products.create');

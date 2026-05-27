@@ -33,7 +33,7 @@
     {{-- 金額・会社・お気に入り --}}
     <div class="mb-4">
         <p class="fs-4 mb-2">金額：￥{{ $product->price }}</p>
-        <p class="fs-4 mb-2">会社：{{ $product->company }}</p>
+        <p class="fs-4 mb-2">会社：{{ $product->company->company_name }}</p>
 
         @auth
             <form action="{{ route('products.like', $product) }}" method="POST" class="like-form">

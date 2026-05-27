@@ -53,6 +53,11 @@
                 {{ $product->description }}
             </p>
 
+            <p>
+                <strong>会社名：</strong>
+                {{ $product->company->company_name }}
+            </p>
+
             <form action="{{ route('products.purchase.store', $product) }}"
                   method="POST">
 
